@@ -1,4 +1,4 @@
-file1 = open('myfile.txt', 'r')
+file1 = open('thousand_images_with_tags.txt', 'r')
 Lines = file1.readlines()
 list_of_names = []
 trivy_list_of_names_with_commands = []
@@ -11,15 +11,16 @@ count = 0
 for line in Lines:
 
     content = line.strip()
-    name_with_publisher_but_without_count = content.split(':')
-    print(name_with_publisher_but_without_count[0])
-    name_without_publisher_and_without_count = name_with_publisher_but_without_count[0].split('/')
-    trivy_pull_image_command = "trivy image --skip-update " + name_with_publisher_but_without_count[0] \
-                               + " > trivy_top_thousand/" + name_without_publisher_and_without_count[0] + "_errors"
-    snyk_pull_image_command = "snyk container test " + name_with_publisher_but_without_count[0] \
-                               + " > snyk_top_thousand/" + name_without_publisher_and_without_count[0] + "_errors"
-    docker_image_rm_command = "docker image rm " + name_with_publisher_but_without_count[0] \
-                              + " > docker_rm_logs/" + name_without_publisher_and_without_count[0] + "_errors"
+    name_with_publisher_but_without_count = content
+    print(name_with_publisher_but_without_count)
+    #print(type(name_with_publisher_but_without_count))
+    name_without_publisher_and_without_count = name_with_publisher_but_without_count.split('/')
+    trivy_pull_image_command = "trivy image --skip-update " + name_with_publisher_but_without_count \
+                               + " > trivy_top_thousand/" + name_with_publisher_but_without_count + "_errors"
+    snyk_pull_image_command = "snyk container test " + name_with_publisher_but_without_count \
+                               + " > snyk_top_thousand/" + name_with_publisher_but_without_count + "_errors"
+    docker_image_rm_command = "docker image rm " + name_with_publisher_but_without_count \
+                              + " > docker_rm_logs/" + name_with_publisher_but_without_count + "_errors"
     #list_of_names.insert(count, name_without_publisher_and_without_count[1])
     trivy_list_of_names_with_commands.insert(count, trivy_pull_image_command)
     #snyk_list_of_names_with_commands.insert(count, snyk_pull_image_command)
