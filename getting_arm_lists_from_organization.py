@@ -3,10 +3,11 @@ from bs4 import BeautifulSoup
 import json
 from urllib.request import urlopen
 import collections
+from json import JSONDecodeError
 
 
 
-file1 = open('list_of_organizations_three.txt', 'r')
+file1 = open('list_of_organizations.txt', 'r')
 Lines = file1.readlines()
 list_of_names = []
 trivy_list_of_names_with_commands = []
@@ -25,24 +26,39 @@ for line in Lines:
     user = content
     print(content)
     #url = "https://hub.docker.com/u/" + content
-    try:
-        url = "https://hub.docker.com/v2/repositories/" + content +"/?page_size=25&page=" + str(count_of_pages) + "&ordering=last_updated"
-    except json.decoder.JSONDecodeError:
-        print ("Do Something")
-        url = "https://hub.docker.com/v2/repositories/" + content + "/?page_size=25&page=" + str(count_of_pages) + "&ordering=last_updated"
+    url = "https://hub.docker.com/v2/repositories/" + content +"/?page_size=25&page=" + str(count_of_pages) + "&ordering=last_updated"
+    #url = "https://hub.docker.com/v2/repositories/" + content + "/?page_size=25&page=" + str(count_of_pages) + "&ordering=last_updated"
 
 
     r = requests.get(url)
     soup = BeautifulSoup(r.content, 'html.parser')
-    newDictionary = json.loads(str(soup.text))
-    next_url = newDictionary['next']
 
-    while next_url is not None:
-        url = "https://hub.docker.com/v2/repositories/" + content + "/?page_size=25&page=" + str(count_of_pages) \
-              + "&ordering=last_updated"
+    try:
+        newDictionary = json.loads(str(soup.text))
+    except json.decoder.JSONDecodeError:
+        print("Do Something in lines")
         r = requests.get(url)
         soup = BeautifulSoup(r.content, 'html.parser')
         newDictionary = json.loads(str(soup.text))
+
+    next_url = newDictionary['next']
+
+
+    while next_url is not None:
+
+        url = "https://hub.docker.com/v2/repositories/" + content + "/?page_size=25&page=" + str(count_of_pages) + "&ordering=last_updated"
+
+        r = requests.get(url)
+        soup = BeautifulSoup(r.content, 'html.parser')
+
+        try:
+            newDictionary = json.loads(str(soup.text))
+        except json.decoder.JSONDecodeError:
+            print("Do Something in next_url")
+            r = requests.get(url)
+            soup = BeautifulSoup(r.content, 'html.parser')
+            newDictionary = json.loads(str(soup.text))
+
         next_url = newDictionary['next']
         #print(newDictionary)
         for j in range(len(newDictionary['results'])):
@@ -62,7 +78,7 @@ for line in Lines:
 print("PRINTING")
 print(count)
 
-with open('list_of_arm_images.txt', 'w+') as f1:
+with open('list_of_arm_images_full.txt', 'w+') as f1:
     # write elements of list
     for items in list_of_arm_image_names:
         f1.write('%s\n' % items)
@@ -71,5 +87,3 @@ with open('list_of_arm_images.txt', 'w+') as f1:
 
 # close the file
 f1.close()
-
-
