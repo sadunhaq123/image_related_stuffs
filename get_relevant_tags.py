@@ -3,9 +3,11 @@ from bs4 import BeautifulSoup
 import json
 from urllib.request import urlopen
 import collections
-
-
-file1 = open('myfile.txt', 'r')
+import time
+#full_erroneous_list_full_two
+#file1 = open('myfile.txt', 'r')
+#file1 = open('full_erroneous_list_full.txt', 'r')
+file1 = open('list_of_officials.txt', 'r')
 Lines = file1.readlines()
 list_of_names_with_most_recent_tag = []
 list_of_names = []
@@ -19,13 +21,17 @@ count = 0
 # Strips the newline character
 for line in Lines:
     first_thousand = first_thousand + 1
-    if (first_thousand > 1000):
-        break
+    if first_thousand %25 == 0:
+        time.sleep(20)
+    #if (first_thousand > 1000):
+    #    break
     content = line.strip()
-    name_with_publisher_but_without_count = content.split(':')
+    #name_with_publisher_but_without_count = content.split(':')
     #print(name_with_publisher_but_without_count[0])
-    name_without_publisher_and_without_count = name_with_publisher_but_without_count[0].split('/')
-    url = "https://hub.docker.com/v2/repositories/" + name_with_publisher_but_without_count[0] +"/tags/?page=1"
+    #name_without_publisher_and_without_count = name_with_publisher_but_without_count[0].split('/')
+    list_with_name_and_count = content.split(':')
+    print(list_with_name_and_count[0])
+    url = "https://hub.docker.com/v2/repositories/library/" + list_with_name_and_count[0] +"/tags/?page=1"
     print(url)
     r = requests.get(url)
     soup = BeautifulSoup(r.content, 'html.parser')
@@ -36,12 +42,13 @@ for line in Lines:
     except KeyError:
         erroneous_list.append(url)
         print('Something happened in the results!')
+        time.sleep(20)
         continue
 
     for j in range(len(newDictionary['results'])):
         dictionary_with_all = newDictionary['results'][j]
         name = dictionary_with_all['name']
-        name_with_most_recent_tag = name_with_publisher_but_without_count[0] + ":" + name
+        name_with_most_recent_tag = list_with_name_and_count[0] + ":" + name
         #print(name_with_most_recent_tag)
         list_of_names_with_most_recent_tag.insert(count, name_with_most_recent_tag)
         #print(name_with_most_recent_tag)
@@ -49,14 +56,16 @@ for line in Lines:
 
     count = count+1
 
-with open('list_of_names_with_most_recent_tag.txt', 'w') as file_with_list_of_names_with_most_recent_tag:
+
+
+with open('full_list_of_names_with_most_recent_tag_feb_2022.txt', 'w') as file_with_list_of_names_with_most_recent_tag:
     for list_item_in_list_of_names_with_most_recent_tag in list_of_names_with_most_recent_tag:
         file_with_list_of_names_with_most_recent_tag.write('%s\n' % list_item_in_list_of_names_with_most_recent_tag)
 
 file_with_list_of_names_with_most_recent_tag.close()
 
 
-with open('erroneous_list.txt', 'w') as file_with_erroneous_list:
+with open('full_erroneous_list_full_feb_2022.txt', 'w') as file_with_erroneous_list:
     for list_item_in_erroneous_list in erroneous_list:
         file_with_erroneous_list.write('%s\n' % list_item_in_erroneous_list)
 
