@@ -1,0 +1,17 @@
+node:current-alpine3.15
+docker:windowsservercore-ltsc2022
+caddy:builder-alpine
+perl:5.30.3-threaded-buster
+jruby:9.3.3.0-jre11
+jetty:9.4.45-jre11-slim
+bash:devel-alpine3.15
+buildpack-deps:jammy-scm
+flink:1.13.6-scala_2.12-java8
+groovy:jdk8
+ros:rolling-ros1-bridge-focal
+erlang:25.0-rc1.0.0-slim
+mediawiki:stable-fpm-alpine
+jetty:9.4.45-jre11-slim
+xwiki:lts-postgres-tomcat
+hylang:python3.9-windowsservercore-ltsc2022
+eclipse-temurin:8u322-b06-jre-centos7

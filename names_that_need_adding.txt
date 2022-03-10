@@ -1,0 +1,17 @@
+node:lts-alpine3.14
+docker:dind-rootless
+caddy:latest
+perl:latest
+jruby:latest
+jetty:latest
+bash:latest
+buildpack-deps:xenial-scm
+flink:latest
+groovy:jre16
+ros:noetic-ros-core-focal
+erlang:latest
+mediawiki:latest
+jetty:latest
+xwiki:stable-postgres-tomcat
+hylang:latest
+eclipse-mosquitto:latest
